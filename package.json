@@ -1,0 +1,27 @@
+{
+  "name": "idea-drop-api",
+  "version": "1.0.0",
+  "description": "Backend API for IdeaDrop app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurisumendoza/idea-drop-api.git"
+  },
+  "type": "module",
+  "author": "Kristopher Mendoza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kurisumendoza/idea-drop-api/issues"
+  },
+  "homepage": "https://github.com/kurisumendoza/idea-drop-api#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.0.2"
+  }
+}
