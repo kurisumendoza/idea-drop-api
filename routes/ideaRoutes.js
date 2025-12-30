@@ -132,6 +132,19 @@ router.put('/:id', protect, async (req, res, next) => {
       throw new Error('Idea not found');
     }
 
+    const idea = await Idea.findById(id);
+
+    if (!idea) {
+      res.json(404);
+      throw new Error('Idea not found');
+    }
+
+    // Check if user owns idea
+    if (idea.user.toString() !== req.user._id.toString()) {
+      res.status(403);
+      throw new Error('Not authorized to update this idea!');
+    }
+
     const { title, summary, description, tags } = req.body || {};
 
     if (!title?.trim() || !summary?.trim() || !description?.trim()) {
@@ -139,26 +152,16 @@ router.put('/:id', protect, async (req, res, next) => {
       throw new Error('Title, summary, and description are required!');
     }
 
-    const updatedIdea = await Idea.findByIdAndUpdate(
-      id,
-      {
-        title,
-        summary,
-        description,
-        tags: Array.isArray(tags)
-          ? tags
-          : tags?.split(',').map((tag) => tag?.trim()),
-      },
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    idea.title = title;
+    idea.summary = summary;
+    idea.description = description;
+    idea.tags = Array.isArray(tags)
+      ? tags
+      : typeof tags === 'string'
+      ? tags.split(',').map((tag) => tag.trim().filter(Boolean))
+      : [];
 
-    if (!updatedIdea) {
-      res.status(404);
-      throw new Error('Idea not found!');
-    }
+    const updatedIdea = await idea.save();
 
     res.json(updatedIdea);
   } catch (err) {
